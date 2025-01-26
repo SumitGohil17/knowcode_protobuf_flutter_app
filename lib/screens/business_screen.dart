@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:greenify/models/waste_collection.dart';
@@ -6,6 +8,7 @@ import 'dart:ui';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:greenify/screens/business_profile.dart';
 
@@ -326,38 +329,28 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {
-                  // Add your buy logic here
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Confirm Purchase'),
-                        content: Text(
-                            'Would you like to buy ${waste.quantity} ${waste.unit} of ${waste.cropType}?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Implement purchase logic here
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text('Confirm'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                onPressed: () async {
+                  // WhatsApp linking
+                  String phoneNumber = waste.call() ??
+                      ""; // Assuming there's a phoneNumber field in Waste model
+                  String message =
+                      "Hi, I'm interested in your waste listing: ${waste.quantity} ${waste.unit} ${waste.cropType}";
+                  String encodedMessage = Uri.encodeComponent(message);
+                  String whatsappUrl =
+                      "https://wa.me/$phoneNumber?text=$encodedMessage";
+
+                  if (await canLaunch(whatsappUrl)) {
+                    await launch(whatsappUrl);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Could not launch WhatsApp'),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade600,
+                  backgroundColor: Colors.green.shade600,
                   foregroundColor: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -366,9 +359,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
                   ),
                   elevation: 4,
                 ),
-                icon: const Icon(Icons.shopping_cart),
+                icon: const Icon(Icons.chat),
                 label: const Text(
-                  'Buy Now',
+                  'Contact Now',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
