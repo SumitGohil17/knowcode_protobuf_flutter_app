@@ -270,7 +270,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade100,
                   borderRadius: BorderRadius.circular(20),
@@ -298,7 +299,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.green.shade400, Colors.green.shade600],
@@ -331,7 +333,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: const Text('Confirm Purchase'),
-                        content: Text('Would you like to buy ${waste.quantity} ${waste.unit} of ${waste.cropType}?'),
+                        content: Text(
+                            'Would you like to buy ${waste.quantity} ${waste.unit} of ${waste.cropType}?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
@@ -356,7 +359,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade600,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -385,7 +389,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.calendar_today, size: 18, color: Colors.blue.shade700),
+                    Icon(Icons.calendar_today,
+                        size: 18, color: Colors.blue.shade700),
                     const SizedBox(width: 8),
                     Text(
                       'Available from: ${DateFormat('MMM d, yyyy').format(waste.availableFrom)}',
@@ -400,7 +405,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 18, color: Colors.blue.shade700),
+                    Icon(Icons.location_on,
+                        size: 18, color: Colors.blue.shade700),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -428,11 +434,89 @@ class _BusinessScreenState extends State<BusinessScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.description, size: 18, color: Colors.blue.shade700),
+                  Icon(Icons.description,
+                      size: 18, color: Colors.blue.shade700),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       waste.description!,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade700,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    )
+        .animate()
+        .fadeIn(duration: const Duration(milliseconds: 500))
+        .slideX(begin: 0.2, end: 0);
+  }
+
+  Widget _buildBusinessCard(
+    String title,
+    String value,
+    String unit,
+    IconData icon,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.8),
+            color,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.3),
+            blurRadius: 20,
+            spreadRadius: 2,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: double.parse(value)),
+            duration: const Duration(seconds: 2),
+            builder: (context, double val, child) {
+              return RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${val.toInt()}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32,
